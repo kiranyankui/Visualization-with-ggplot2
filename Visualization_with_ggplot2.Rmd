@@ -1,0 +1,38 @@
+---
+title: "Visualiztion with ggplot2"
+output: github_document
+---
+## Load tidyverse and ggridges
+```{r libraries}
+library(tidyverse)
+library(ggridges)
+```
+We will be working with NOAA weather data downloaded using rnoaa::meteo_pull_monitors function!
+
+```{r}
+weather_df = 
+  rnoaa::meteo_pull_monitors(
+    c("USW00094728", "USC00519397", "USS0023B17S"),
+    var = c("PRCP", "TMIN", "TMAX"), 
+    date_min = "2017-01-01",
+    date_max = "2017-12-31") %>%
+  mutate(
+    name = recode(
+      id, 
+      USW00094728 = "CentralPark_NY", 
+      USC00519397 = "Waikiki_HA",
+      USS0023B17S = "Waterhole_WA"),
+    tmin = tmin / 10,
+    tmax = tmax / 10) %>%
+  select(name, id, everything())
+
+weather_df
+
+```
+__Q: Are we pulling out variables (including names) directly from this datasets? Or are we pulling out these variables and then we name them? __
+
+## Basic Scatterplot
+
+```{r basic scatterplot}
+ggplot(weather_df, aes(x = tmin, y = tmax))
+```
